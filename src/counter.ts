@@ -1,4 +1,4 @@
-import { createMachine, interpret, assign } from 'xstate';
+import { createMachine, assign } from 'xstate';
 
 namespace events {
   export type INC = { type: 'INC' };
@@ -11,7 +11,7 @@ interface CounterContext {
   count: number;
 }
 
-const counterMachine = createMachine<CounterContext, CounterEvent>({
+export default createMachine<CounterContext, CounterEvent>({
   initial: 'active',
   context: {
     count: 0,
@@ -33,17 +33,3 @@ const counterMachine = createMachine<CounterContext, CounterEvent>({
     },
   },
 });
-
-const counterService = interpret(counterMachine)
-  .onTransition((state) => console.log(state.context.count))
-  .start();
-// => 0
-
-counterService.send('INC');
-// => 1
-
-counterService.send('INC');
-// => 2
-
-counterService.send('DEC');
-// => 1
